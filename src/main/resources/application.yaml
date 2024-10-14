@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/incidencia  # URL de la base de datos 'incidencia'
+    url: jdbc:mysql://localhost:3306/incidencias  # URL de la base de datos 'incidencia'
     username: root                              # Usuario 'root'
     password: root                              # Contraseña 'root'
     driver-class-name: com.mysql.cj.jdbc.Driver  # Driver para MySQL
