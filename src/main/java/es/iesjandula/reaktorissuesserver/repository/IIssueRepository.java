@@ -1,6 +1,6 @@
-package es.iesjandula.reaktorissuesserver.persistence.repository;
+package es.iesjandula.reaktorissuesserver.repository;
 
-import es.iesjandula.reaktorissuesserver.persistence.models.*;
+import es.iesjandula.reaktorissuesserver.models.*;
 import es.iesjandula.reaktorissuesserver.utils.Constansts;
 
 import java.util.List;

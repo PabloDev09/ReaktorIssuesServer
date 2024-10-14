@@ -1,4 +1,4 @@
-package es.iesjandula.reaktorissuesserver.persistence.models;
+package es.iesjandula.reaktorissuesserver.models;
 
 import java.io.Serializable;
 import java.sql.Date;

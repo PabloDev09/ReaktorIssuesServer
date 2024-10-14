@@ -1,4 +1,4 @@
-package es.iesjandula.reaktorissuesserver.controller;
+package es.iesjandula.reaktorissuesserver.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iesjandula.reaktorissuesserver.exceptions.ReaktorIssuesServerException;
-import es.iesjandula.reaktorissuesserver.persistence.models.IssueEntity;
-import es.iesjandula.reaktorissuesserver.persistence.repository.IIssueRepository;
+import es.iesjandula.reaktorissuesserver.models.IssueEntity;
+import es.iesjandula.reaktorissuesserver.repository.IIssueRepository;
 import es.iesjandula.reaktorissuesserver.utils.Constansts;
 import lombok.extern.slf4j.Slf4j;
 
