@@ -1,7 +1,5 @@
 package es.iesjandula.reaktorissuesserver.utils;
 
-import java.util.Date;
-
 /**
  * Class: Constansts
  * Clase para definir constantes
@@ -25,11 +23,10 @@ public class Constansts {
 	// Constante para indicar una Issue 'Canceled'
 	public static final String CANCELED = "Canceled";
 	
-	// Constante para indicar una la fecha actual de alta de una Issue
-	public static final java.sql.Date NOW = (java.sql.Date) new Date();
-	
 	// Constante para indicar el error de valores incorrectos
 	public static final String ERROR_INVALID_VALUES = "Valores incorrectos";
+	// Constante para indicar el error de incidencia no encontrada
 	public static final String ERROR_ISSUE_NOT_FOUND = "Incidencia no encontrada";
+	// Constante para indicar el error de incidencia existente
 	public static final String ERROR_ISSUE_EXISTS = "Incidencia ya existente";
 }

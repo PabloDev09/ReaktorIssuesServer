@@ -1,7 +1,7 @@
 package es.iesjandula.reaktorissuesserver.models;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -39,17 +39,13 @@ public class IssueEntity implements Serializable {
     @Id
     private Long idIssue;
 
-    @Column
-    private String title;
-
+    @Column String title; 
+    
     @Column
     private String description;
 
     @Column
     private String classNumber;
-
-    @Column
-    private String professorName;
 
     @Column
     private String professorMail;
@@ -60,7 +56,8 @@ public class IssueEntity implements Serializable {
     @Column
     private String status;
 
-    /**
+    
+    /** Seccionar mejor el metodo
      * 
      * Verifica si los valores clave de la Issue son correctos.
      * Comprueba si el correo del profesor es válido (no vacío ni con un dominio incorrecto), 
@@ -69,67 +66,68 @@ public class IssueEntity implements Serializable {
      * Además, si el nombre del profesor está vacío, intenta deducirlo a partir del correo.
      * Si el título está vacío, se asigna un valor predeterminado ("Sin título").
      * 
-     * @return true si todos los valores son correctos; de lo contrario, false.
+     * @return true - si todos los valores son correctos; de lo contrario, false.
      */
-    public boolean checkValuesIsCorrect()
-    {
-        boolean isProfessorMailCorrect = true;
-        boolean isClassNumberCorrect = true;
-        boolean isDescriptionCorrect = true;
-
-        // Comprueba si el correo del profesor es válido
-        if (this.professorMail.isEmpty() || this.professorMail.isBlank() || this.professorMail.endsWith("@g.educaand.es"))
+    public boolean checkValuesIsCorrect() {
+        boolean isProfessorMailCorrect = checkProfessorMail();
+        boolean isClassNumberCorrect = checkClassNumber();
+        boolean isDescriptionCorrect = checkDescription();
+        
+        if(this.title == null || this.title.isBlank())
         {
-            isProfessorMailCorrect = false;
+        	this.setTitle("Sin título");
         }
-
-        // Comprueba si el número de clase no está vacío
-        if (this.classNumber.isBlank() || this.classNumber.isEmpty())
-        {
-            isClassNumberCorrect = false;
-        }
-
-        // Si el nombre del profesor está vacío, intenta deducirlo del correo
-        if (professorName.isBlank() || professorName.isEmpty())
-        {
-            if (isProfessorMailCorrect)
-            {
-                this.professorName = this.professorMail.substring(0, this.professorMail.length() - 14);
-            }
-        }
-
-        // Si el título está vacío, se asigna un valor predeterminado
-        if (this.title.isEmpty() || this.title.isBlank()) this.setTitle("Sin título");
-
-        // Verifica si la descripción está vacía
-        if (this.description.isEmpty() || this.description.isBlank())
-        {
-            isDescriptionCorrect = false;
-        }
-
+        
         // Devuelve el estado de la validación
         return isProfessorMailCorrect && isClassNumberCorrect && isDescriptionCorrect;
     }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        IssueEntity other = (IssueEntity) obj;
-        return Objects.equals(classNumber, other.classNumber) 
-                && Objects.equals(description, other.description) 
-                && Objects.equals(professorMail, other.professorMail)
-                && Objects.equals(professorName, other.professorName);
+    /**
+     * Método privado para comprobar si el correo del profesor es válido.
+     * 
+     * @return true  - si el correo del profesor no está vacío, no está en blanco y no termina con "@g.educaand.es";
+     *         false - en caso contrario.
+     */
+    private boolean checkProfessorMail() {
+        return !this.professorMail.isBlank() && 
+               !this.professorMail.endsWith("@g.educaand.es");
     }
 
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(classNumber, date, description, idIssue, professorMail, professorName, status);
+    /**
+     * Método privado para comprobar si el número de clase no está vacío.
+     * 
+     * @return true  - si el número de clase no está vacío y no está en blanco;
+     *         false - en caso contrario.
+     */
+    private boolean checkClassNumber() {
+        return !this.classNumber.isBlank();
     }
+
+    /**
+     * Método privado para verificar si la descripción no está vacía.
+     * 
+     * @return true  - si la descripción no está vacía y no está en blanco;
+     *         false - en caso contrario.
+     */
+    private boolean checkDescription() {
+        return !this.description.isBlank();
+    }
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IssueEntity other = (IssueEntity) obj;
+		return Objects.equals(classNumber, other.classNumber) && Objects.equals(description, other.description)
+				&& Objects.equals(professorMail, other.professorMail);
+	}
+	
+	public int hashCode() {
+		return Objects.hash(classNumber, description, professorMail);
+	}
+
+    
 }

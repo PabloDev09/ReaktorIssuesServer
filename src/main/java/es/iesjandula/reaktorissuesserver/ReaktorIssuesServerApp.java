@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;  // Importa
  * 
  * @version 1.0.0
  * 
- * @author TuNombre
+ * @author PabloDev09
  * 
  */
 @SpringBootApplication  // Anotación que indica que es una aplicación Spring Boot
