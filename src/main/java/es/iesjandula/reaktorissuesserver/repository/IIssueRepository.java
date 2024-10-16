@@ -1,5 +1,6 @@
 package es.iesjandula.reaktorissuesserver.repository;
 
+import es.iesjandula.reaktorissuesserver.dto.IssueEntityDto;
 import es.iesjandula.reaktorissuesserver.models.*;
 import es.iesjandula.reaktorissuesserver.utils.Constansts;
 
@@ -22,65 +23,74 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IIssueRepository extends JpaRepository<IssueEntity, Long>
 {
+
     /**
-     * Verifica si una Issue ya existe en el repositorio.
-     * Recorre la lista de Issues existentes y comprueba si la Issue proporcionada es igual a alguna de ellas.
-     * Si existe, establece el id de la Issue en la proporcionada.
+     * Cambia el estado de la Issue a un estado.
+     * Busca la Issue por su id y actualiza su estado.
      * 
-     * @param issue - La Issue a comprobar.
-     * @return true - Ssi la Issue existe; false - de lo contrario.
+     * @param idIssueDto - El id de la Issue a cambiar estado.
+     * @param statDto    - El estado a cambiar
      */
-    default <S extends IssueEntity> boolean exists(IssueEntity issue) 
+    default boolean changeStatus(IdIssue idIssueDto, String statDto)
     {
-        // Lista de Issues existentes
-        List<IssueEntity> issues = this.findAll();
-        
-        // For each por cada Issue existente
-        for (IssueEntity repositoryIssue : issues)
+    	// Variable para controlar si se ha cambiado el estado
+    	boolean isChangeStatus = false;
+    	
+    	// Si el estado por parametro es To Do
+        if(statDto.equals(Constansts.STATUS_TO_DO))
         {
-            // Si es igual la Issue a la del Repository
-            if (issue.equals(repositoryIssue))
-            {
-            	// La issue comprobada toma el id del Issue del Repository para poder realizar acciones
-                issue.setIdIssue(repositoryIssue.getIdIssue());
-                // Retornar true
-                return true;
-            }
+        	// Cambiar estado a To Do
+        	findById(idIssueDto).get().setStatus(Constansts.STATUS_TO_DO);
+        	return !isChangeStatus;
         }
-        // Retornar falso
-        return false;
+        
+        // Si el estado por parametro es Canceled
+        if(statDto.equals(Constansts.STATUS_CANCELED))
+        {
+        	// Cambiar estado a Canceled
+        	findById(idIssueDto).get().setStatus(Constansts.STATUS_CANCELED);
+        	return !isChangeStatus;
+        }
+        
+        // Si el estado por parametro es Finished
+        if(statDto.equals(Constansts.STATUS_FINISHED))
+        {
+        	// Cambiar estado a Finished
+        	findById(idIssueDto).get().setStatus(Constansts.STATUS_FINISHED);
+        	return !isChangeStatus;
+        }
+        
+        // Si el estado por parametro es In Process
+        if(statDto.equals(Constansts.STATUS_IN_PROCESS))
+        {
+        	// Cambiar estado a In Process
+        	findById(idIssueDto).get().setStatus(Constansts.STATUS_IN_PROCESS);
+        	return !isChangeStatus;
+        }
+       
+        return isChangeStatus;
     }
 
     /**
-     * Cambia el estado de la Issue a "Cancelada".
-     * Busca la Issue por su id y actualiza su estado a la constante CANCELED.
+     * Crea un objeto del tipo IssueEntity con los valores recogidos del IssueEntityDto
+     * Actualiza los valores de la incidencia correspondiente
      * 
-     * @param idIssue - El id de la Issue a cancelar.
+     * @param issueDto - El objeto IssueEntityDto
      */
-    default void addToCancel(Long idIssue)
-    {
-        findById(idIssue).get().setStatus(Constansts.CANCELED);
-    }
+	default void saveAndFlush(IssueEntityDto issueDto)
+	{
+		IssueEntity issue = 
+				new IssueEntity
+				(
+				issueDto.getClassNumDto(), 
+				issueDto.getProfMailDto(), 
+				issueDto.getDateDto(), 
+				issueDto.getDescDto(), 
+				issueDto.getStatDto()
+				);
+		saveAndFlush(issue);
+	}
+	
 
-    /**
-     * Cambia el estado de la Issue a "En proceso".
-     * Busca la Issue por su id y actualiza su estado a la constante IN_PROCESS.
-     * 
-     * @param idIssue - El id de la Issue a actualizar.
-     */
-    default void addToInProgress(Long idIssue)
-    {
-        findById(idIssue).get().setStatus(Constansts.IN_PROCESS);
-    }
-    
-    /**
-     * Cambia el estado de la Issue a "Finalizada".
-     * Busca la Issue por su id y actualiza su estado a la constante FINISHED.
-     * 
-     * @param idIssue - El id de la Issue a actualizar.
-     */
-    default void addToFinished(Long idIssue)
-    {
-        findById(idIssue).get().setStatus(Constansts.FINISHED);
-    }
+
 }

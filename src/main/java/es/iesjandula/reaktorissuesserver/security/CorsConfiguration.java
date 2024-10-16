@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer; 
 
 /**
- * Clase: CorsConfiguration
+ * Class: CorsConfiguration
  * Configuración de CORS (Cross-Origin Resource Sharing) para la aplicación.
  * 
  * Permite el acceso a recursos desde diferentes orígenes.
@@ -31,7 +31,7 @@ public class CorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 // Configuración de los endpoints expuestos para CORS
-                registry.addMapping("/**");  // Permite todos los endpoints
+                registry.addMapping("localhost:8080/incidencias");  // Permite todos los endpoints
             }
         };
     }
