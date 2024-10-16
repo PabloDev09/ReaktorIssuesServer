@@ -71,7 +71,10 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, Long>
         return isChangeStatus;
     }
 
-    /**
+    Optional<IssueEntity> findById(IdIssue idIssueDto);
+
+
+	/**
      * Crea un objeto del tipo IssueEntity con los valores recogidos del IssueEntityDto
      * Actualiza los valores de la incidencia correspondiente
      * 
@@ -90,6 +93,10 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, Long>
 				);
 		saveAndFlush(issue);
 	}
+
+	void deleteById(Class<? extends IdIssue> idIssue);
+
+	boolean existsById(Class<? extends IdIssue> idIssue);
 	
 
 
