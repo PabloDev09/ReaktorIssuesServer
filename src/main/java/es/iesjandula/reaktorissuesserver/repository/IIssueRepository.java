@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
  * @author PabloDev09
  */
 @Repository
-public interface IIssueRepository extends JpaRepository<IssueEntity, Long>
+public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
 {
 
     /**

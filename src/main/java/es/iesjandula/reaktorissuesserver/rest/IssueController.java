@@ -44,7 +44,8 @@ public class IssueController
      * Verifica que la incidencia tenga valores válidos y que no exista previamente.
      * Si es válida y no existe, se añade al repositorio con estado TO_DO y fecha actual.
      * 
-     * @param issue 						- La incidencia a crear.
+     * @param professorMail					- Mail del profesor de la incidencia
+     * @param issueDto 						- La incidencia a crear.
      * @throws ReaktorIssuesServerException - Si la incidencia no es válida o ya existe.
      */
     @RequestMapping(method = RequestMethod.POST, value = "")
@@ -63,7 +64,7 @@ public class IssueController
         IdIssue idIssue = new IdIssue(issueDto.getClassNumDto(), issueDto.getProfMailDto(), issueDto.getDateDto());
         
         // Verificar si la Issue ya existe en el Repository
-        if (iIssueRepository.existsById(idIssue.getClass()))
+        if (iIssueRepository.existsById(idIssue))
         {
             // Warning en caso de que exista la Issue en el Repository
             log.error("La incidencia {} ya existe.", issueDto.toString());
@@ -92,41 +93,64 @@ public class IssueController
      * Endpoint para borrar una incidencia.
      * Verifica que la incidencia exista en el repositorio antes de eliminarla.
      * 
-     * @param issue 						- La incidencia a eliminar.
+     * @param issueDto 						- La incidencia a eliminar.
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "")
     public ResponseEntity<String> deleteIssue(@RequestBody IssueEntityDto issueDto) throws ReaktorIssuesServerException
     {
+        // Crear objeto id de la Issue
     	IdIssue idIssue = new IdIssue(issueDto.getClassNumDto(), issueDto.getProfMailDto(), issueDto.getDateDto());
     	
     	// No existe la incidencia
-        if(!iIssueRepository.existsById(idIssue.getClass()))
+        if(!iIssueRepository.existsById(idIssue))
         {
         	// Excepción incidencia no encontrada
         	throw new ReaktorIssuesServerException(Constansts.ERROR_ISSUE_NOT_FOUND);
         }        
 
         // Si se ha encontrado la incidencia borrar
-        iIssueRepository.deleteById(idIssue.getClass());
+        iIssueRepository.deleteById(idIssue);
         
         // Retornar un status 201 para indicar que se ha eliminado correctamente
         return ResponseEntity.status(201).body("La incidencia se ha eliminado con exito");
     } 
     
     /**
+     * Endpoint para borrar una incidencia.
+     * Verifica que la incidencia exista en el repositorio antes de eliminarla.
+     * 
+     * @param idIssue 						- El id de la incidencia
+     * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "")
+    public Optional<IssueEntity> getIssue(@RequestBody IdIssue idIssue) throws ReaktorIssuesServerException
+    {
+    	// No existe la incidencia
+        if(!iIssueRepository.existsById(idIssue))
+        {
+        	// Excepción incidencia no encontrada
+        	throw new ReaktorIssuesServerException(Constansts.ERROR_ISSUE_NOT_FOUND);
+        }        
+
+        // Si se ha encontrado la incidencia, devolverla
+        return iIssueRepository.findById(idIssue);
+    } 
+    
+    /**
      * Endpoint para actualizar una incidencia.
      * Verifica que la incidencia exista en el repositorio antes de actualizarla.
      * 
-     * @param issue 						- La incidencia a eliminar.
+     * @param issueDto						- La incidencia a eliminar.
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
      */
     @RequestMapping(method = RequestMethod.POST, value = "/actualizar")
     public ResponseEntity<String> updateIssue(@RequestBody IssueEntityDto issueDto) throws ReaktorIssuesServerException
     {
+        // Crear objeto id de la Issue
     	IdIssue idIssue = new IdIssue(issueDto.getClassNumDto(), issueDto.getProfMailDto(), issueDto.getDateDto());
     	// No existe la incidencia
-        if(!iIssueRepository.existsById(idIssue.getClass()))
+        if(!iIssueRepository.existsById(idIssue))
         {
         	// Excepción incidencia no encontrada
         	throw new ReaktorIssuesServerException(Constansts.ERROR_ISSUE_NOT_FOUND);
@@ -143,15 +167,15 @@ public class IssueController
      * Endpoint para marcar cambiar de estaod una indicencia.
      * Cambia el estado de la incidencia a un estado pasado por el body si existe en el repositorio.
      * 
-     * @param id 							- El id de incidencia a cambiar.
-     * @param status						- El estado de la incidencia a cambiar.
+     * @param idDto 						- El id de incidencia a cambiar.
+     * @param statDto						- El estado de la incidencia a cambiar.
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
      */
     @RequestMapping(method = RequestMethod.POST, value = "/cambiar-estado")
-    public ResponseEntity<String> changeStatus(@RequestBody IdIssue idDto, String statDto) throws ReaktorIssuesServerException
+    public ResponseEntity<String> changeStatusIssue(@RequestBody IdIssue idDto, String statDto) throws ReaktorIssuesServerException
     {
     	// No existe la incidencia
-        if(!iIssueRepository.existsById(idDto.getClass()))
+        if(!iIssueRepository.existsById(idDto))
         {
         	 // Indicar error 
              log.error("La incidencia no existe");
