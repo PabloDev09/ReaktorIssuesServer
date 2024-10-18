@@ -20,15 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReaktorIssuesServerException extends IOException{
 	
-	/**
-	 * IDE pide indicar el serialUID
-	 */
+	
+	// IDE pide indicar el serialUID
 	private static final long serialVersionUID = 1L;
 
 	// Constructor parametrizado
 	public ReaktorIssuesServerException(String msg)
 	{
-		log.warn(msg);
+		log.error(msg);
 	}
 	
 }

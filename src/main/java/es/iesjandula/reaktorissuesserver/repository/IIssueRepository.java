@@ -76,7 +76,7 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
 
 	/**
      * Crea un objeto del tipo IssueEntity con los valores recogidos del IssueEntityDto
-     * Actualiza los valores de la incidencia correspondiente
+     * Actualiza o guarda los valores de la incidencia correspondiente
      * 
      * @param issueDto - El objeto IssueEntityDto
      */
@@ -94,9 +94,6 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
 		saveAndFlush(issue);
 	}
 
-	void deleteById(Class<? extends IdIssue> idIssue);
-
-	boolean existsById(Class<? extends IdIssue> idIssue);
 	
 
 

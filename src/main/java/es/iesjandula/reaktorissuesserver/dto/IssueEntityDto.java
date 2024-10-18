@@ -50,12 +50,12 @@ public class IssueEntityDto
      */
     public boolean checkValuesIsCorrect() 
     {
-        boolean isProfessorMailCorrect = checkProfessorMail();
-        boolean isClassNumberCorrect = checkClassNumber();
-        boolean isDescriptionCorrect = checkDescription();
+        boolean isProfMailDtoCorrect = checkProfMailDto();
+        boolean isClassNumDtoCorrect = checkClassNumDto();
+        boolean isDescDtoCorrect = checkDescDto();
                
         // Devuelve el estado de la validación
-        return isProfessorMailCorrect && isClassNumberCorrect && isDescriptionCorrect;
+        return isProfMailDtoCorrect && isClassNumDtoCorrect && isDescDtoCorrect;
     }
 
     /**
@@ -64,7 +64,7 @@ public class IssueEntityDto
      * @return true  - si el correo del profesor no está vacío, no está en blanco y no termina con "@g.educaand.es";
      *         false - en caso contrario.
      */
-    private boolean checkProfessorMail() {
+    private boolean checkProfMailDto() {
         return !this.profMailDto.isBlank() && 
                !this.profMailDto.endsWith("@g.educaand.es");
     }
@@ -75,7 +75,7 @@ public class IssueEntityDto
      * @return true  - si el número de clase no está vacío y no está en blanco;
      *         false - en caso contrario.
      */
-    private boolean checkClassNumber() {
+    private boolean checkClassNumDto() {
         return !this.classNumDto.isBlank();
     }
 
@@ -85,7 +85,7 @@ public class IssueEntityDto
      * @return true  - si la descripción no está vacía y no está en blanco;
      *         false - en caso contrario.
      */
-    private boolean checkDescription() 
+    private boolean checkDescDto() 
     {
         return !this.descDto.isBlank();
     }
