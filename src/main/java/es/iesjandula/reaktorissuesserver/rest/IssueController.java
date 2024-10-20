@@ -1,6 +1,7 @@
 package es.iesjandula.reaktorissuesserver.rest;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -47,6 +48,7 @@ public class IssueController
      * @param professorMail					- Mail del profesor de la incidencia
      * @param issueDto 						- La incidencia a crear.
      * @throws ReaktorIssuesServerException - Si la incidencia no es válida o ya existe.
+     * @return ResponseEntity<String>       - Respuesta según el estado
      */
     @RequestMapping(method = RequestMethod.POST, value = "")
     public ResponseEntity<String> addIssue(@RequestHeader String professorMail,
@@ -95,6 +97,7 @@ public class IssueController
      * 
      * @param issueDto 						- La incidencia a eliminar.
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
+     * @return ResponseEntity<String>       - Respuesta según el estado
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "")
     public ResponseEntity<String> deleteIssue(@RequestBody IssueEntityDto issueDto) throws ReaktorIssuesServerException
@@ -122,7 +125,9 @@ public class IssueController
      * 
      * @param idIssue 						- El id de la incidencia
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
+     * @return Optional<IssueEntity>        - Incidencia correspondiente
      */
+    
     @RequestMapping(method = RequestMethod.GET, value = "")
     public Optional<IssueEntity> getIssue(@RequestBody IdIssue idIssue) throws ReaktorIssuesServerException
     {
@@ -138,11 +143,37 @@ public class IssueController
     } 
     
     /**
+     * Endpoint para filtrar incidencias.
+     * Verifica si la lista de incidencias filtradas está vacía. 
+     * 
+     * @param issueDto                       - La indicencia con los filtros a aplicar.
+     * @throws ReaktorIssuesServerException  - Si no se encuentra ninguna incidencia que coincida con los filtros.
+     * @return List<IssueEntity>             - Lista de incidencias que coinciden con los filtros aplicados.
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/filtrar")
+    public List<IssueEntity> getIssuesByFilters(@RequestBody IssueEntityDto issueDto) throws ReaktorIssuesServerException {
+    	// Lista de incidencia filtradas
+        List<IssueEntity> issues = iIssueRepository.findByFilters(issueDto.getClassNumDto(), issueDto.getProfMailDto(), issueDto.getDateDto(), issueDto.getDescDto(), issueDto.getStatDto());
+        
+        // Si la lista de incidencias está vacía
+        if(issues.isEmpty())
+        {
+       	 	// Indicar error 
+            log.error("La lista de indicencia no existe");
+        	// Excepción lista de incidencia vacía
+        	throw new ReaktorIssuesServerException(Constansts.ERROR_BLANK_ISSUES_LIST);
+        }
+        // Si no esta vacía, devolverla
+		return issues;
+    }
+    
+    /**
      * Endpoint para actualizar una incidencia.
      * Verifica que la incidencia exista en el repositorio antes de actualizarla.
      * 
      * @param issueDto						- La incidencia a eliminar.
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
+     * @return ResponseEntity<String>       - Respuesta según el estado
      */
     @RequestMapping(method = RequestMethod.POST, value = "/actualizar")
     public ResponseEntity<String> updateIssue(@RequestBody IssueEntityDto issueDto) throws ReaktorIssuesServerException
@@ -152,6 +183,8 @@ public class IssueController
     	// No existe la incidencia
         if(!iIssueRepository.existsById(idIssue))
         {
+       	 	// Indicar error 
+            log.error("La incidencia no existe");
         	// Excepción incidencia no encontrada
         	throw new ReaktorIssuesServerException(Constansts.ERROR_ISSUE_NOT_FOUND);
         }        
@@ -170,6 +203,7 @@ public class IssueController
      * @param idDto 						- El id de incidencia a cambiar.
      * @param statDto						- El estado de la incidencia a cambiar.
      * @throws ReaktorIssuesServerException - Si la incidencia no se encuentra.
+     * @return ResponseEntity<String>       - Respuesta según el estado
      */
     @RequestMapping(method = RequestMethod.POST, value = "/cambiar-estado")
     public ResponseEntity<String> changeStatusIssue(@RequestBody IdIssue idDto, String statDto) throws ReaktorIssuesServerException

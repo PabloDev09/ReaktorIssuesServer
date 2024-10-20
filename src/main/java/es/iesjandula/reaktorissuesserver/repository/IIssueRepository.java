@@ -4,11 +4,13 @@ import es.iesjandula.reaktorissuesserver.dto.IssueEntityDto;
 import es.iesjandula.reaktorissuesserver.models.*;
 import es.iesjandula.reaktorissuesserver.utils.Constansts;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -41,6 +43,7 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
         {
         	// Cambiar estado a To Do
         	findById(idIssueDto).get().setStatus(Constansts.STATUS_TO_DO);
+        	// Si ha cambiado de estado devolver true
         	return !isChangeStatus;
         }
         
@@ -49,6 +52,7 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
         {
         	// Cambiar estado a Canceled
         	findById(idIssueDto).get().setStatus(Constansts.STATUS_CANCELED);
+        	// Si ha cambiado de estado devolver true
         	return !isChangeStatus;
         }
         
@@ -57,6 +61,7 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
         {
         	// Cambiar estado a Finished
         	findById(idIssueDto).get().setStatus(Constansts.STATUS_FINISHED);
+        	// Si ha cambiado de estado devolver true
         	return !isChangeStatus;
         }
         
@@ -65,9 +70,11 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
         {
         	// Cambiar estado a In Process
         	findById(idIssueDto).get().setStatus(Constansts.STATUS_IN_PROCESS);
+        	// Si ha cambiado de estado devolver true
         	return !isChangeStatus;
         }
        
+        // Si no se ha cambiado el estado devolver false
         return isChangeStatus;
     }
 
@@ -91,8 +98,15 @@ public interface IIssueRepository extends JpaRepository<IssueEntity, IdIssue>
 				issueDto.getDescDto(), 
 				issueDto.getStatDto()
 				);
-		saveAndFlush(issue);
-	}
+	}	
+		
+	@Query("SELECT i FROM IssueEntity i WHERE " +
+		           "(?1 IS NULL OR i.classNum = ?1) AND " +  // Filtro por número de clase
+		           "(?2 IS NULL OR i.profMail = ?2) AND " +  // Filtro por correo de profesor
+		           "(?3 IS NULL OR i.date = ?3) AND " +      // Filtro por fecha
+		           "(?4 IS NULL OR i.desc = ?4) AND " +      // Filtro por descripción
+		           "(?5 IS NULL OR i.status = ?5)")          // Filtro por estado
+		    List<IssueEntity> findByFilters(String classNum, String profMail, LocalDateTime date, String desc, String status);
 
 	
 

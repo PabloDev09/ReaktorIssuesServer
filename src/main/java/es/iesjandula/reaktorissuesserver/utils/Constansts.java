@@ -20,7 +20,7 @@ public class Constansts {
 	public static final String STATUS_IN_PROCESS = "In process";
 	// Constante para indicar una Issue 'Finalizada'
 	public static final String STATUS_FINISHED = "Finished";
-	// Constante para indicar una Issue 'Canceled'
+	// Constante para indicar una Issue 'Cancelada'
 	public static final String STATUS_CANCELED = "Canceled";
 	
 	// Constante para indicar el error de valores incorrectos
@@ -31,4 +31,6 @@ public class Constansts {
 	public static final String ERROR_ISSUE_EXISTS = "Incidencia ya existente";
 	// Constante para indicar el error de incidencia existente
 	public static final String ERROR_NOT_CHANGED_STATUS = "Incidencia no ha podido cambiar de estado";
+	// Constante para indicar el error de lista de incidencias vacía
+	public static final String ERROR_BLANK_ISSUES_LIST = "Lista de incidencia vacía";
 }
